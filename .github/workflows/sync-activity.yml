@@ -22,6 +22,4 @@ jobs:
           git config user.name 'Manuel Pineyro'
           git config user.email '1578541+MOPineyro@users.noreply.github.com'
       - name: Import new daily activity markers
-        run: python3 scripts/sync_activity.py
-      - name: Publish markers
-        run: git push origin HEAD:main
+        run: python3 scripts/sync_activity.py --push

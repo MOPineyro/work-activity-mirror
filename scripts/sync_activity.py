@@ -82,6 +82,7 @@ def pending(source, recorded):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--push', action='store_true', help='Publish at most 500 new markers per push')
     args = parser.parse_args()
     state = json.loads(STATE.read_text())
     account = state['source_account']
@@ -126,8 +127,12 @@ def main():
             env.update(GIT_AUTHOR_DATE=stamp, GIT_COMMITTER_DATE=stamp)
             git('commit', '-m', f'Mirror public work activity for {day} ({ordinal}/{end})', env=env)
             done += 1
+            if args.push and done % 500 == 0:
+                git('push', 'origin', 'HEAD:main')
             if done % 250 == 0:
                 print(f'Created {done}/{count} new markers', flush=True)
+    if args.push and done % 500:
+        git('push', 'origin', 'HEAD:main')
     assert not pending(source, state['days'])
     print(f'Imported {done} markers; stored total: {state["total_markers"]}', flush=True)
 

@@ -8,9 +8,9 @@ This repository contains **synthetic, backdated placeholder commits** that mirro
 
 The [Sync work activity workflow](https://github.com/MOPineyro/work-activity-mirror/actions/workflows/sync-activity.yml) runs daily at **06:17 UTC (03:17 in Buenos Aires)**. GitHub may delay scheduled jobs. Run it anytime from **Actions → Sync work activity → Run workflow**.
 
-The workflow reads the same public calendar shown on the work profile and appends only missing markers. It needs no personal access token, custom secret, or access to work repositories. GitHub's built-in repository token publishes the markers. Private contribution visibility must stay enabled on the source account.
+The workflow reads the same public calendar shown on the work profile and appends only missing markers. It publishes in batches of at most 500 so large catch-up runs are indexed by GitHub. It needs no personal access token, custom secret, or access to work repositories. GitHub's built-in repository token publishes the markers. Private contribution visibility must stay enabled on the source account.
 
-For a local preview, run `python3 scripts/sync_activity.py --dry-run`. To import, run it without `--dry-run` from a clean checkout, then push. Dates come directly from the source calendar; author and committer timestamps use noon UTC on each historical day.
+For a local preview, run `python3 scripts/sync_activity.py --dry-run`. To import and publish in batches, run `python3 scripts/sync_activity.py --push` from a clean checkout. Dates come directly from the source calendar; author and committer timestamps use noon UTC on each historical day.
 
 Imported days remain in history as the source's rolling calendar advances. If GitHub reduces a previously imported day's count, the sync stops for review instead of rewriting published history. GitHub can disable schedules in public repositories after 60 days without repository activity; re-enable the workflow from Actions if that happens.
 
