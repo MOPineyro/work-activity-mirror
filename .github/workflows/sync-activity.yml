@@ -1,0 +1,27 @@
+name: Sync work activity
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-work-activity
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Configure private commit identity
+        run: |
+          git config user.name 'Manuel Pineyro'
+          git config user.email '1578541+MOPineyro@users.noreply.github.com'
+      - name: Import new daily activity markers
+        run: python3 scripts/sync_activity.py
+      - name: Publish markers
+        run: git push origin HEAD:main

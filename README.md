@@ -1,11 +1,17 @@
 # Work activity mirror
 
-This repository contains **synthetic, backdated placeholder commits** that mirror daily counts of my merged work commits. The original engineering work is associated with [@mop-moxfive](https://github.com/mop-moxfive).
+This repository contains **synthetic, backdated placeholder commits** that mirror the daily contribution counts publicly displayed on my work profile, [@mop-moxfive](https://github.com/mop-moxfive). The original engineering work belongs to that account. Each marker represents one counted activity, including commits, pull requests, or reviews.
 
-Imported on November 16, 2026: **968 work commits across 172 active days**, from 2026-01-27 through 2026-11-16. This snapshot covers authored commits on the default branch of one work repository. Pull requests, reviews, and other repositories are outside this snapshot.
+`activity.json` stores the imported daily totals. The initial import on November 16, 2026 began with 968 verified merged work commits; subsequent imports use the full public calendar. The mirror contains aggregate counts only. Work code, commit messages, repository names, and private email addresses are excluded. Markers use my GitHub-provided noreply address.
 
-`activity.json` contains the daily totals. Dates preserve original author calendar dates where available, with UTC used for 1 remaining commit. Each marker uses the corresponding historical day as its author and committer date. These are activity markers rather than original work commits.
+## Automatic updates
 
-The mirror contains aggregate counts only; work code, commit messages, repository names, and private email addresses are excluded. Commits use my GitHub-provided noreply address.
+The [Sync work activity workflow](https://github.com/MOPineyro/work-activity-mirror/actions/workflows/sync-activity.yml) runs daily at **06:17 UTC (03:17 in Buenos Aires)**. GitHub may delay scheduled jobs. Run it anytime from **Actions → Sync work activity → Run workflow**.
 
-This is a one-time import. Existing personal activity remains in addition to these markers, so the combined profile graph can differ from the work account graph.
+The workflow reads the same public calendar shown on the work profile and appends only missing markers. It needs no personal access token, custom secret, or access to work repositories. GitHub's built-in repository token publishes the markers. Private contribution visibility must stay enabled on the source account.
+
+For a local preview, run `python3 scripts/sync_activity.py --dry-run`. To import, run it without `--dry-run` from a clean checkout, then push. Dates come directly from the source calendar; author and committer timestamps use noon UTC on each historical day.
+
+Imported days remain in history as the source's rolling calendar advances. If GitHub reduces a previously imported day's count, the sync stops for review instead of rewriting published history. GitHub can disable schedules in public repositories after 60 days without repository activity; re-enable the workflow from Actions if that happens.
+
+The personal profile includes these synthetic markers plus existing personal activity and setup commits, so its total can differ from the work profile. This is an activity mirror, not a transfer of original commits, PRs, or reviews.
